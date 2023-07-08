@@ -29,10 +29,16 @@ const patchInfo = (req, res, next) => {
   const { name, email } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, email }, { returnDocument: 'after' })
     .orFail(() => {
-      throw new InvalidData('Invalid Data');
+      throw new NotFound('User Not Found');
     })
     .then((user) => res.status(200).send(user))
-    .catch(next);
+    .catch((err) => {
+      if (err.code === MONGODB_ERROR) {
+        next(new DuplicateError('Такая почта уже существует'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 // регистрация

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -8,8 +9,7 @@ const auth = require('./middlewares/auth');
 const NotFound = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const PORT = 3000;
-const DB_ADDRESS = 'mongodb://127.0.0.1:27017/filmsbd';
+const { PORT = 3000, DB_ADDRESS = 'mongodb://127.0.0.1:27017/bitfilmsdb' } = process.env;
 
 const app = express();
 
@@ -26,16 +26,17 @@ app.use(requestLogger);
 
 app.use(router);
 
-app.use(errorLogger);
-
 app.use(auth, (req, res, next) => {
   next(new NotFound('Запрашиваемая страница не найдена'));
 });
+
+app.use(errorLogger);
 
 app.use(errors());
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
+  console.log(err.message);
 
   res.status(statusCode).send({
     message: statusCode === 500
