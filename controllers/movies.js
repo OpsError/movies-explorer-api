@@ -9,9 +9,6 @@ const MONGODB_ERROR = 11000;
 // список фильмов в избранных
 const getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
-    .orFail(() => {
-      throw new NotFound('Movie Not Found');
-    })
     .then((film) => res.status(200).send(film))
     .catch(next);
 };
