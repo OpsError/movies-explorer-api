@@ -28,7 +28,7 @@ const validateMovieBody = celebrate({
     image: Joi.string().uri().pattern(new RegExp(urlPattern)).required(),
     trailerLink: Joi.string().uri().pattern(new RegExp(urlPattern)).required(),
     thumbnail: Joi.string().uri().pattern(new RegExp(urlPattern)).required(),
-    movieId: Joi.objectId().required(),
+    movieId: Joi.number().integer().required(),
     nameRU: Joi.string().required().required(),
     nameEN: Joi.string().required().required(),
   }),
@@ -36,7 +36,7 @@ const validateMovieBody = celebrate({
 
 const validateMovieParams = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.objectId().required(),
+    movieId: Joi.objectId(),
   }),
 });
 
